@@ -1,9 +1,12 @@
-import React from "react";
-import {FilterValuesType} from "./App";
+import React, {ChangeEvent, useState} from "react";
+import {FilterValuesType} from "../App";
+import {Button} from "../components/Button";
+import {Input} from "../components/Input";
+import {Task} from "./Task";
 
 
 export type TaskType = {
-    id: number
+    id: string
     title: string
     isDone: boolean
 }
@@ -11,14 +14,24 @@ export type TaskType = {
 type TodolistPropsType = {
     title: string
     tasks: TaskType[]
-    removeTask: (id: number) => void
+    removeTask: (taskId: string) => void
     changeFilter: (value: FilterValuesType) => void
+    addTask: (title: string) => void
 }
 
 export const Todolist = (props: TodolistPropsType) => {
+    const [title, setTitle] = useState<string>('')
 
     const changeFilterButton = (value: FilterValuesType) => {
         props.changeFilter(value)
+    }
+
+    const addTaskHandler = () => {
+        if(title.length ==0){
+            return
+        }
+        props.addTask(title)
+        setTitle('')
     }
 
     return (
@@ -26,8 +39,8 @@ export const Todolist = (props: TodolistPropsType) => {
             <div>
                 <h3>{props.title}</h3>
                 <div>
-                    <input/>
-                    <button>+</button>
+                    <Input title={title} setTitle={setTitle} addTaskHandler={addTaskHandler}/>
+                    <Button name={'+'} callback={addTaskHandler}/>
                 </div>
                 <ul>
                     {props.tasks.map(task => <Task removeTask={props.removeTask} task={task}/>)}
@@ -43,22 +56,9 @@ export const Todolist = (props: TodolistPropsType) => {
 }
 
 
-type TaskPropsType = {
-    task: TaskType
-    removeTask: Function
-}
 
-const Task = (props: TaskPropsType) => {
 
-    const removeTaskOnHandler = (id: number) => {
-        props.removeTask(id)
-    }
 
-    return (
-        <li key={props.task.id}>
-            <input type={"checkbox"} checked={props.task.isDone}/>
-            <span>{props.task.title}</span>
-            <button onClick={() => removeTaskOnHandler(props.task.id)}>x</button>
-        </li>
-    )
-}
+
+
+
