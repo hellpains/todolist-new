@@ -1,9 +1,13 @@
 import React, {ChangeEvent, KeyboardEvent} from "react";
 
+
+
 type InputType = {
     title: string
     setTitle: (title: string) => void
     addTaskHandler: () => void
+    setError: (error: string | null) => void
+    error: string | null
 }
 
 export const Input = (props: InputType) => {
@@ -12,13 +16,15 @@ export const Input = (props: InputType) => {
         props.setTitle(event.currentTarget.value)
     }
 
-    const onKeyHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter' ) {
+    const onKeyPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        props.setError(null)
+        if (event.key === 'Enter') {
             props.addTaskHandler()
         }
     }
 
 
-    return <input onKeyPress={onKeyHandler} value={props.title} onChange={onChangeHandler}/>
+    return <input className={props.error ? 'error' : ''} onKeyPress={onKeyPressHandler} value={props.title}
+                  onChange={onChangeHandler}/>
 
 }
