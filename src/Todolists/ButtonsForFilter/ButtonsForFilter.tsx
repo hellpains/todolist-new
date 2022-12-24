@@ -3,7 +3,8 @@ import {FilterValuesType} from "../../App";
 
 type ButtonsForFilterPropsType = {
     filter: FilterValuesType
-    changeFilter: (value: FilterValuesType) => void
+    todolistId: string
+    changeFilter: (todolistId: string, value: FilterValuesType) => void
 }
 
 export const ButtonsForFilter = (props: ButtonsForFilterPropsType) => {
@@ -12,7 +13,7 @@ export const ButtonsForFilter = (props: ButtonsForFilterPropsType) => {
     const stylesCompletedButton = props.filter == 'completed' ? 'active-filter' : ''
 
     const changeFilterButton = (value: FilterValuesType) => {
-        props.changeFilter(value)
+        props.changeFilter(props.todolistId, value)
     }
 
     return (

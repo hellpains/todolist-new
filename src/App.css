@@ -21,3 +21,6 @@
 .is-done {
     opacity: .5;
 }
+input{
+    outline: none ;
+}

@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from "react";
-import {FilterValuesType} from "../App";
+import {FilterValuesType, TodolistType} from "../App";
 import {Button} from "../components/Button";
 import {Input} from "../components/Input";
 import {Task} from "./Task";
@@ -13,27 +13,29 @@ export type TaskType = {
 }
 
 type TodolistPropsType = {
+    todolistId: string
     title: string
     tasks: TaskType[]
-    removeTask: (taskId: string) => void
-    changeFilter: (value: FilterValuesType) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean) => void
+    removeTask: (todolistId: string, taskId: string) => void
+    changeFilter: (todolistId: string, value: FilterValuesType) => void
+    addTask: (todolistId: string, title: string) => void
+    changeStatus: (todolistId: string, taskId: string, isDone: boolean) => void
     filter: FilterValuesType
+    removeTodolist: (todolist: string) => void
 }
 
 export const Todolist = (props: TodolistPropsType) => {
     const [title, setTitle] = useState<string>('')
     const [error, setError] = useState<string | null>(null)
 
-    const changeFilterButton = (value: FilterValuesType) => {
-        props.changeFilter(value)
+    const removeTodolistHandler = () => {
+        props.removeTodolist(props.todolistId)
     }
 
 
     const addTaskHandler = () => {
         if (title.trim() !== '') {
-            props.addTask(title.trim())
+            props.addTask(props.todolistId, title.trim())
             setTitle('')
         } else {
             setError('Title is required')
@@ -47,7 +49,9 @@ export const Todolist = (props: TodolistPropsType) => {
     return (
         <div className="App">
             <div>
-                <h3>{props.title}</h3>
+                <h3>{props.title}
+                    <button onClick={removeTodolistHandler}>x</button>
+                </h3>
                 <div>
                     <Input error={error} setError={setError} title={title} setTitle={setTitle}
                            addTaskHandler={addTaskHandler}/>
@@ -59,7 +63,8 @@ export const Todolist = (props: TodolistPropsType) => {
                         props.tasks.map(task => {
                             return (
                                 <Task
-                                    changeTaskStatus={props.changeTaskStatus}
+                                    todolistId={props.todolistId}
+                                    changeTaskStatus={props.changeStatus}
                                     removeTask={props.removeTask}
                                     task={task}
                                 />
@@ -67,7 +72,8 @@ export const Todolist = (props: TodolistPropsType) => {
                         })
                     }
                 </ul>
-                <ButtonsForFilter filter={props.filter} changeFilter={props.changeFilter}/>
+                <ButtonsForFilter filter={props.filter} changeFilter={props.changeFilter}
+                                  todolistId={props.todolistId}/>
             </div>
         </div>
     )
